@@ -1,0 +1,42 @@
+[
+    {
+        "firstName":"Hassen",
+        "lastName":"Hamdaoui",
+        "cin" : "11445782",
+        "gender":"Homme",
+        "phone" : "24145148",
+        "dateOfBirth":"12/05/1995",
+        "maritalStatus":"Célibataire",
+        "address":"Rue Jamel Abdennasser 39, Tunis, Tunis 1000, TN",
+        "insuranceName":"COMAR Assurance",
+        "medicalHistory":["Anémie","Bronchite","Diabète"]
+
+    },
+    {
+        "firstName":"Olfa",
+        "lastName":"Ben Abbou",
+        "cin" : "10041578",
+        "gender":"Femme",
+        "phone" : "95845125",
+        "dateOfBirth":"05/06/1999",
+        "maritalStatus":"Célibataire",
+        "address":"Rue Jamel Eddine El Afghani, Tunis, Tunis 1095, TN",
+        "insuranceName":"COMAR Assurance",
+        "medicalHistory":["Pneumonie","Maladie de Thyroïde","Ulcère"]
+
+    },
+    {
+        "firstName":"Hamdi",
+        "lastName":"Sehli",
+        "cin" : "12554879",
+        "gender":"Homme",
+        "phone" : "36958458",
+        "dateOfBirth":"02/01/1998",
+        "maritalStatus":"Célibataire",
+        "address":"Rue Jamel Eddine El Afghani, Tunis, Tunis 1095, TN",
+        "insuranceName":"COMAR Assurance",
+        "medicalHistory":["Maladie de Thyroïde","Varicelle"]
+
+    }
+    
+]
