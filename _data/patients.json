@@ -1,42 +1,36 @@
 [
     {
-        "firstName":"Hassen",
-        "lastName":"Hamdaoui",
+        "Prenom":"Hassen",
+        "Nom":"Hamdaoui",
         "cin" : "11445782",
-        "gender":"Homme",
-        "phone" : "24145148",
-        "dateOfBirth":"12/05/1995",
-        "maritalStatus":"Célibataire",
-        "address":"Rue Jamel Abdennasser 39, Tunis, Tunis 1000, TN",
-        "insuranceName":"COMAR Assurance",
-        "medicalHistory":["Anémie","Bronchite","Diabète"]
-
+        "sexe":"Homme",
+        "numeroTel" : "24145148",
+        "DateNaiss":"12/05/1995",
+        "Etatcivil":"Célibataire",
+        "adresse":"Rue Jamel Abdennasser 39, Tunis, Tunis 1000, TN",
+        "assurance":"COMAR Assurance"
     },
     {
-        "firstName":"Olfa",
-        "lastName":"Ben Abbou",
+        "Prenom":"Olfa",
+        "Nom":"Ben Abbou",
         "cin" : "10041578",
-        "gender":"Femme",
-        "phone" : "95845125",
-        "dateOfBirth":"05/06/1999",
-        "maritalStatus":"Célibataire",
-        "address":"Rue Jamel Eddine El Afghani, Tunis, Tunis 1095, TN",
-        "insuranceName":"COMAR Assurance",
-        "medicalHistory":["Pneumonie","Maladie de Thyroïde","Ulcère"]
-
+        "sexe":"Femme",
+        "numeroTel" : "95845125",
+        "DateNaiss":"05/06/1999",
+        "Etatcivil":"Célibataire",
+        "adresse":"Rue Jamel Eddine El Afghani, Tunis, Tunis 1095, TN",
+        "assurance":"COMAR Assurance"
     },
     {
-        "firstName":"Hamdi",
-        "lastName":"Sehli",
+        "Prenom":"Hamdi",
+        "Nom":"Sehli",
         "cin" : "12554879",
-        "gender":"Homme",
-        "phone" : "36958458",
-        "dateOfBirth":"02/01/1998",
-        "maritalStatus":"Célibataire",
-        "address":"Rue Jamel Eddine El Afghani, Tunis, Tunis 1095, TN",
-        "insuranceName":"COMAR Assurance",
-        "medicalHistory":["Maladie de Thyroïde","Varicelle"]
-
+        "sexe":"Homme",
+        "numeroTel" : "36958458",
+        "DateNaiss":"02/01/1998",
+        "Etatcivil":"Célibataire",
+        "adresse":"Rue Jamel Eddine El Afghani, Tunis, Tunis 1095, TN",
+        "assurance":"COMAR Assurance"
     }
     
 ]

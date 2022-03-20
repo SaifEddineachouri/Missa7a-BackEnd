@@ -2,14 +2,14 @@ const mongoose = require("mongoose");
 const geocoder = require("../utils/geocoder");
 
 const PatientSchema = new mongoose.Schema({
-  firstName: {
+  Prenom: {
     type: String,
     required: [true, "Please add a firstName"],
     trim: true,
     maxlength: [20, "firstName can not be more than 20 characters "],
     minlength: [4, "firstName can not be less than 4 characters"],
   },
-  lastName: {
+  Nom: {
     type: String,
     required: [true, "Please add a lastName"],
     trim: true,
@@ -28,29 +28,30 @@ const PatientSchema = new mongoose.Schema({
       8,
       "National identification number can not be shorter than 8 numbers",
     ],
+    match: [/^[01][01][0-9]{6}$/, "Please add a valid CIN number"],
   },
-  gender: {
+  sexe: {
     type: String,
     enum: ["Homme", "Femme"],
   },
-  phone: {
+  numeroTel: {
     type: String,
     required: [true, "Please add a phone number"],
     maxlength: [8, "Phone number can not be longer than 8 characters"],
     minlength: [8, "Phone number can not be shorter than 8 characters"],
     match: [/([ \-_/]*)(\d[ \-_/]*){8}/, "Please add a valid phone number"],
   },
-  dateOfBirth: {
+  DateNaiss: {
     type: Date,
     required: [true, "Please add a Date of Birth"],
   },
-  maritalStatus: {
+  Etatcivil: {
     type: String,
     enum: ["Célibataire", "Marié(e)", "Divorcé(e)", "Veuf"],
   },
   //Rue Jamel Abdennasser 39, Tunis, Tunis 1000, TN
   //Rue Jamel Eddine El Afghani, Tunis, Tunis 1095, TN
-  address: {
+  adresse: {
     type: String,
     required: [true, "Please add an adress"],
   },
@@ -71,23 +72,8 @@ const PatientSchema = new mongoose.Schema({
     zipcode: String,
     country: String,
   },
-  insuranceName: {
+  assurance: {
     type: String,
-  },
-  medicalHistory: {
-    type: [String],
-    required: true,
-    enum: [
-      "Anémie",
-      "Asthme",
-      "Bronchite",
-      "Varicelle",
-      "Diabète",
-      "Pneumonie",
-      "Maladie de Thyroïde",
-      "Ulcère",
-      "autre",
-    ],
   },
   createAt: {
     type: Date,
@@ -97,7 +83,7 @@ const PatientSchema = new mongoose.Schema({
 
 // Geocode & create location field
 PatientSchema.pre("save", async function (next) {
-  const loc = await geocoder.geocode(this.address);
+  const loc = await geocoder.geocode(this.adresse);
   this.location = {
     type: "Point",
     coordinates: [loc[0].longitude, loc[0].latitude],
@@ -109,8 +95,8 @@ PatientSchema.pre("save", async function (next) {
     country: loc[0].countryCode,
   };
 
-  // Do  not save address in db
-  this.address = undefined;
+  // Do not save address in db
+  this.adresse = undefined;
   next();
 });
 module.exports = mongoose.model("Patient", PatientSchema);
