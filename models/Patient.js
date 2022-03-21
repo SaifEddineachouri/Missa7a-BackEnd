@@ -4,17 +4,17 @@ const geocoder = require("../utils/geocoder");
 const PatientSchema = new mongoose.Schema({
   Prenom: {
     type: String,
-    required: [true, "Please add a firstName"],
+    required: [true, "Please add a Prenom"],
     trim: true,
-    maxlength: [20, "firstName can not be more than 20 characters "],
-    minlength: [4, "firstName can not be less than 4 characters"],
+    maxlength: [20, "Prenom can not be more than 20 characters "],
+    minlength: [4, "Prenom can not be less than 4 characters"],
   },
   Nom: {
     type: String,
-    required: [true, "Please add a lastName"],
+    required: [true, "Please add a Nom"],
     trim: true,
-    maxlength: [20, "lastName can not be more than 20 characters "],
-    minlength: [5, "lastName can not be less than 5 characters"],
+    maxlength: [20, "Nom can not be more than 20 characters "],
+    minlength: [5, "Nom can not be less than 5 characters"],
   },
   cin: {
     type: String,

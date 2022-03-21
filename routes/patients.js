@@ -13,13 +13,24 @@ const Patient = require("../models/Patient");
 
 const router = express.Router();
 
+const { protect, authorize } = require("../middleware/auth");
+
 router.route("/radius/:zipcode/:distance").get(getPatientInRadius);
 
 router
   .route("/")
-  .get(advancedResults(Patient), getPatients)
-  .post(createPatient);
+  .get(
+    protect,
+    authorize("secretary", "admin"),
+    advancedResults(Patient),
+    getPatients
+  )
+  .post(protect, createPatient);
 
-router.route("/:id").get(getPatient).put(updatePatient).delete(deletePatient);
+router
+  .route("/:id")
+  .get(protect, authorize("secretary", "admin"), getPatient)
+  .put(protect, authorize("secretary", "admin"), updatePatient)
+  .delete(protect, authorize("admin"), deletePatient);
 
 module.exports = router;
