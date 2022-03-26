@@ -6,15 +6,15 @@ const jwt = require("jsonwebtoken");
 const UserSchema = new mongoose.Schema({
   Prenom: {
     type: String,
-    required: [true, "Please add a firstName"],
-    maxlength: [20, "firstName can not be more than 20 characters "],
-    minlength: [4, "firstName can not be less than 4 characters"],
+    required: [true, "Please add a Prenom"],
+    maxlength: [20, "Prenom can not be more than 20 characters "],
+    minlength: [4, "Prenom can not be less than 4 characters"],
   },
   Nom: {
     type: String,
-    required: [true, "Please add a lastName"],
-    maxlength: [20, "lastName can not be more than 20 characters "],
-    minlength: [4, "lastName can not be less than 4 characters"],
+    required: [true, "Please add a Nom"],
+    maxlength: [20, "Nom can not be more than 20 characters "],
+    minlength: [4, "Nom can not be less than 4 characters"],
   },
   cin: {
     type: String,
@@ -29,6 +29,10 @@ const UserSchema = new mongoose.Schema({
       "National identification number can not be shorter than 8 numbers",
     ],
     match: [/^[01][01][0-9]{6}$/, "Please add a valid CIN number"],
+  },
+  avatar: {
+    type: String,
+    required: [true, "Please add a picture"],
   },
   email: {
     type: String,

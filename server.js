@@ -6,7 +6,6 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const errorHandler = require("./middleware/error");
 const connectDB = require("./config/db");
-
 // Load env vars
 dotenv.config({ path: "./config/config.env" });
 
@@ -20,9 +19,18 @@ const app = express();
 
 // Body parser
 app.use(express.json());
+app.use("/public/images", express.static("./public/images"));
+
+const corsOptions = {
+  origin: "http://localhost:4200",
+  preflightContinue: false,
+  optionSuccessStatus: 200,
+  optionsSuccessStatus: 204,
+  credentials: true,
+};
 
 // enable cors
-app.use(cors());
+app.use(cors(corsOptions));
 
 // Cookie parser
 app.use(cookieParser());

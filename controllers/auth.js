@@ -8,18 +8,19 @@ const sendEmail = require("../utils/sendEmail");
 // @route       POST api/v1/auth/register
 // @access      public
 exports.register = asyncHandler(async (req, res, next) => {
-  const { firstName, lastName, cin, email, role, password } = req.body;
+  const { Prenom, Nom, cin, avatar, email, role, password } = req.body;
+  const url = req.protocol + "://" + req.get("host");
 
   // Create user
   const user = await User.create({
-    firstName,
-    lastName,
+    Prenom,
+    Nom,
     cin,
+    avatar: url + "/public/images/" + req.file.filename,
     email,
     role,
     password,
   });
-
   sendTokenResponse(user, 200, res);
 });
 
@@ -31,7 +32,9 @@ exports.login = asyncHandler(async (req, res, next) => {
 
   // Validate email & password
   if (!email || !password) {
-    return next(new ErrorResponse("Please provide an email and password", 400));
+    return next(
+      new ErrorResponse("Veuillez entrer un email et un mot de passe", 400)
+    );
   }
 
   // Check for user
@@ -40,17 +43,31 @@ exports.login = asyncHandler(async (req, res, next) => {
   }).select("+password");
 
   if (!user) {
-    return next(new ErrorResponse("Invalid credentials", 401));
+    return next(new ErrorResponse("Votre e-mail est incorrect", 401));
   }
 
   // Check if password matches
   const isMatch = await user.matchPassword(password);
 
   if (!isMatch) {
-    return next(new ErrorResponse("Invalid credentials", 401));
+    return next(new ErrorResponse("Votre mot de passe est incorrect ", 401));
   }
-
   sendTokenResponse(user, 200, res);
+});
+
+// @desc        Log user out / clear cookie
+// @route       GET api/v1/auth/logout
+// @access      Private
+exports.logout = asyncHandler(async (req, res, next) => {
+  res.cookie("token", "none", {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  });
+
+  res.status(200).json({
+    success: true,
+    data: {},
+  });
 });
 
 // @desc        Get current logged in user
@@ -95,7 +112,7 @@ exports.updatePassword = asyncHandler(async (req, res, next) => {
 
   // Check current password
   if (!(await user.matchPassword(req.body.currentPassword))) {
-    return next(new ErrorResponse("Password is incorrect", 401));
+    return next(new ErrorResponse("Le mot de passe est incorrect", 401));
   }
   user.password = req.body.newPassword;
   await user.save();
@@ -112,7 +129,9 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   });
 
   if (!user) {
-    return next(new ErrorResponse("There is no  user with that email", 404));
+    return next(
+      new ErrorResponse("Il n'y a pas d'utilisateur avec cet e-mail", 404)
+    );
   }
 
   // Get reset token
@@ -123,22 +142,20 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   });
 
   // Create reset url
-  const resetUrl = `${req.protocol}://${req.get(
-    "host"
-  )}/api/v1/auth/resetpassword/${resetToken}`;
+  const resetUrl = `${req.protocol}://localhost:4200/resetpassword/${resetToken}`;
 
   const message = `Vous recevez cet e-mail parce que vous (ou quelqu'un d'autre) \n avez demandé la réinitialisation d'un mot de passe.\n Veuillez faire une demande à : \n\n ${resetUrl}`;
 
   try {
     await sendEmail({
       email: user.email,
-      subject: "Password reset token",
+      subject: "demande de réinitialisation du mot de passe",
       message,
     });
 
     res.status(200).json({
       success: true,
-      data: "Email sent",
+      data: "Veuillez consulter votre boîte mail !",
     });
   } catch (error) {
     console.log(error);
@@ -149,7 +166,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
       validateBeforeSave: false,
     });
 
-    return next(new ErrorResponse("Email could not be sent", 500));
+    return next(new ErrorResponse("Le mail n'a pas pu être envoyé", 500));
   }
   res.status(200).json({
     success: true,
@@ -175,7 +192,7 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
   });
 
   if (!user) {
-    return next(new ErrorResponse("Invalid Token", 400));
+    return next(new ErrorResponse("Token invalide", 400));
   }
 
   // Set new password
