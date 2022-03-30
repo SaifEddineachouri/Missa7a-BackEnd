@@ -9,11 +9,16 @@ const {
 } = require("../controllers/patients");
 
 const advancedResults = require("../middleware/advancedResults");
+const { protect, authorize } = require("../middleware/auth");
 const Patient = require("../models/Patient");
+
+// Include other resource routers
+const dossierRouter = require("./folders");
 
 const router = express.Router();
 
-const { protect, authorize } = require("../middleware/auth");
+// Re-route into other resource routers
+router.use("/:patientId/dossier", dossierRouter);
 
 router.route("/radius/:zipcode/:distance").get(getPatientInRadius);
 
@@ -22,7 +27,7 @@ router
   .get(
     protect,
     authorize("secretary", "admin"),
-    advancedResults(Patient),
+    advancedResults(Patient, "dossier"),
     getPatients
   )
   .post(protect, createPatient);

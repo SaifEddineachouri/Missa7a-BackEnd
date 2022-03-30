@@ -14,7 +14,9 @@ connectDB();
 
 // Route files
 const patients = require("./routes/patients");
+const folders = require("./routes/folders");
 const auth = require("./routes/auth");
+const users = require("./routes/users");
 const app = express();
 
 // Body parser
@@ -42,7 +44,9 @@ if (process.env.NODE_ENV === "development") {
 
 // Mount routers
 app.use("/api/v1/patients", patients);
+app.use("/api/v1/dossiers", folders);
 app.use("/api/v1/auth", auth);
+app.use("/api/v1/users", users);
 
 app.use(errorHandler);
 

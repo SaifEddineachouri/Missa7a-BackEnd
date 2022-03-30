@@ -32,7 +32,7 @@ const UserSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    required: [true, "Please add a picture"],
+    required: [true, "Please add a avatar"],
   },
   email: {
     type: String,

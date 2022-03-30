@@ -53,13 +53,14 @@ exports.updatePatient = asyncHandler(async (req, res, next) => {
 // @route       DELETE api/v1/patients/:id
 // @access      Private
 exports.deletePatient = asyncHandler(async (req, res, next) => {
-  const patient = await Patient.findByIdAndDelete(req.params.id);
+  const patient = await Patient.findById(req.params.id);
 
   if (!patient) {
     return next(
       new ErrorResponse(`Patient not found with id of ${req.params.id}`, 404)
     );
   }
+  patient.remove();
 
   res.status(200).json({ success: true, data: [] });
 });
