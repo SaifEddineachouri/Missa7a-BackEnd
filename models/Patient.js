@@ -19,7 +19,7 @@ const PatientSchema = new mongoose.Schema(
     },
     cin: {
       type: String,
-      required: [false, "Please add a National identification number"],
+      required: false,
       unique: true,
       maxlength: [
         8,
