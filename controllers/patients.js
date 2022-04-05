@@ -23,6 +23,32 @@ exports.getPatient = asyncHandler(async (req, res, next) => {
   res.status(200).json({ success: true, data: patient });
 });
 
+// @desc        Get VISIBLE patients
+// @route       GET api/v1/patients/visible
+// @access      Private
+exports.getVisiblePatients = asyncHandler(async (req, res, next) => {
+  const patients = await Patient.find({ hidden: false });
+  if (!patients) {
+    return next(new ErrorResponse(`All patients are hidden.`, 404));
+  }
+  res
+    .status(200)
+    .json({ success: true, count: patients.length, data: patients });
+});
+
+// @desc        Get HIDDEN patients
+// @route       GET api/v1/patients/hidden
+// @access      Private
+exports.getHiddenPatients = asyncHandler(async (req, res, next) => {
+  const patients = await Patient.find({ hidden: true });
+  if (!patients) {
+    return next(new ErrorResponse(`All patients are visible.`, 404));
+  }
+  res
+    .status(200)
+    .json({ success: true, count: patients.length, data: patients });
+});
+
 // @desc        Create new patient
 // @route       POST api/v1/patients
 // @access      Private
@@ -49,7 +75,7 @@ exports.updatePatient = asyncHandler(async (req, res, next) => {
   res.status(200).json({ success: true, data: patient });
 });
 
-// @desc        Update patient
+// @desc        Delete patient
 // @route       DELETE api/v1/patients/:id
 // @access      Private
 exports.deletePatient = asyncHandler(async (req, res, next) => {
@@ -63,6 +89,30 @@ exports.deletePatient = asyncHandler(async (req, res, next) => {
   patient.remove();
 
   res.status(200).json({ success: true, data: [] });
+});
+
+// @desc        Archive patient
+// @route       Archive api/v1/patients/archive/:id
+// @access      Private
+exports.archivePatient = asyncHandler(async (req, res, next) => {
+  const patient = await Patient.findByIdAndUpdate(
+    req.params.id,
+    { hidden: true },
+    {
+      // HIDDEN
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  if (!patient) {
+    return next(
+      new ErrorResponse(`Patient not found with id of ${req.params.id}`, 404)
+    );
+  }
+  // NEW: Update its status to "hidden" instead and deal with it manually in the front end
+
+  res.status(200).json({ success: true, data: patient });
 });
 
 // @desc        Get patients within a radius

@@ -37,6 +37,14 @@ const DossierMedicaleSchema = new mongoose.Schema({
     type: String,
     required: [false],
   },
+  archived: {
+    type: Boolean,
+    default: false,
+  },
+  files: {
+    type: Array,
+    required: false,
+  },
   ListeConsultations: {
     type: Array,
     default: [], // ID of consultation
@@ -49,7 +57,7 @@ const DossierMedicaleSchema = new mongoose.Schema({
   patient: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Patient",
-    required: true,
+    required: false,
   },
 });
 module.exports = mongoose.model("DossierMedicale", DossierMedicaleSchema);

@@ -15,6 +15,7 @@ connectDB();
 // Route files
 const patients = require("./routes/patients");
 const folders = require("./routes/folders");
+const appointment = require("./routes/appointments");
 const auth = require("./routes/auth");
 const users = require("./routes/users");
 const app = express();
@@ -22,6 +23,7 @@ const app = express();
 // Body parser
 app.use(express.json());
 app.use("/public/images", express.static("./public/images"));
+app.use("/public/documents", express.static("./public/documents"));
 
 const corsOptions = {
   origin: "http://localhost:4200",
@@ -45,6 +47,7 @@ if (process.env.NODE_ENV === "development") {
 // Mount routers
 app.use("/api/v1/patients", patients);
 app.use("/api/v1/dossiers", folders);
+app.use("/api/v1/appointments", appointment);
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/users", users);
 

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const geocoder = require("../utils/geocoder");
+const DossierMedicale = require("../models/Folder");
 
 const PatientSchema = new mongoose.Schema(
   {
@@ -26,7 +27,7 @@ const PatientSchema = new mongoose.Schema(
         "National identification number can not be longer than 8 numbers",
       ],
       minlength: [
-        8,
+        0,
         "National identification number can not be shorter than 8 numbers",
       ],
       match: [/^[01][01][0-9]{6}$/, "Please add a valid CIN number"],
@@ -80,6 +81,10 @@ const PatientSchema = new mongoose.Schema(
     assurance: {
       type: String,
     },
+    hidden: {
+      type: Boolean,
+      default: false,
+    },
     createAt: {
       type: Date,
       default: Date.now,
@@ -116,6 +121,18 @@ PatientSchema.pre("remove", async function (next) {
   await this.model("DossierMedicale").deleteMany({ patient: this._id });
   next();
 });
+
+// Archive Dossier if Patient is hidden
+PatientSchema.post("findOneAndUpdate", async (doc) => {
+  console.log(`Patient ${doc._id} caché. Son dossier sera archivé`);
+  await DossierMedicale.findOneAndUpdate(
+    { patient: doc._id },
+    {
+      archived: true,
+    }
+  ).exec();
+});
+
 
 // Reverse populate with  virtuals
 PatientSchema.virtual("dossier", {

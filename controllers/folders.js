@@ -15,7 +15,7 @@ exports.getDossiers = asyncHandler(async (req, res, next) => {
       select: "Prenom Nom cin numeroTel",
     });
   } else {
-    query = Folder.find().populate({
+    query = Folder.find({ archived: false }).populate({
       path: "patient",
       select: "Prenom Nom cin numeroTel",
     });
@@ -51,8 +51,27 @@ exports.getDossier = asyncHandler(async (req, res, next) => {
   });
 });
 
+// @desc        Get Archived Medical Folders
+// @route       GET api/v1/dossiers/archived
+// @access      Private
+exports.getArchivedDossiers = asyncHandler(async (req, res, next) => {
+  const dossiers = await Folder.find({ archived: true }).populate({
+    path: "patient",
+    select: "Prenom Nom cin numeroTel",
+  });
+
+  if (!dossiers) {
+    return next(new ErrorResponse(`All medical folders are visible.`), 404);
+  }
+  res.status(200).json({
+    success: true,
+    count: dossiers.length,
+    data: dossiers,
+  });
+});
+
 // @desc        Add Medical Folder
-// @route       POST api/v1/patient/:patientId/dossier
+// @route       POST api/v1/patients/:patientId/dossier
 // @access      Private
 exports.addDossier = asyncHandler(async (req, res, next) => {
   req.body.patient = req.params.patientId;
@@ -65,7 +84,34 @@ exports.addDossier = asyncHandler(async (req, res, next) => {
       404
     );
   }
-  const dossier = await Folder.create(req.body);
+
+  const {
+    TaillePatient,
+    PoidsPatient,
+    TensionArterielle,
+    Temperature,
+    PerimetrePatient,
+    Antecedents,
+    AllergiesMedicamenteuses,
+    MaladiesHereditaires,
+    AllergiesAlimentaires,
+  } = req.body;
+
+  const dossier = await Folder.create({
+    Prenom: patient.Prenom,
+    Nom: patient.Nom,
+    TaillePatient,
+    PoidsPatient,
+    TensionArterielle,
+    Temperature,
+    PerimetrePatient,
+    Antecedents,
+    AllergiesMedicamenteuses,
+    MaladiesHereditaires,
+    AllergiesAlimentaires,
+    files: req.files,
+    patient,
+  });
   res.status(200).json({
     success: true,
     data: dossier,
@@ -89,6 +135,34 @@ exports.updateDossier = asyncHandler(async (req, res, next) => {
     new: true,
     runValidators: true,
   });
+
+  res.status(200).json({
+    success: true,
+    data: dossier,
+  });
+});
+
+// @desc        Archive Medical Folder
+// @route       Archive api/v1/dossier/archive/:id
+// @access      Private
+exports.archiveDossier = asyncHandler(async (req, res, next) => {
+  let dossier = await Folder.findById(req.params.id);
+
+  if (!dossier) {
+    return next(
+      new ErrorResponse(`No Medical Folder with the id of ${req.params.id}`),
+      404
+    );
+  }
+
+  dossier = await Folder.findByIdAndUpdate(
+    req.params.id,
+    { archived: true },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
 
   res.status(200).json({
     success: true,

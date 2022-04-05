@@ -4,8 +4,11 @@ const {
   getPatients,
   createPatient,
   updatePatient,
+  archivePatient,
   deletePatient,
   getPatientInRadius,
+  getHiddenPatients,
+  getVisiblePatients,
 } = require("../controllers/patients");
 
 const advancedResults = require("../middleware/advancedResults");
@@ -22,6 +25,9 @@ router.use("/:patientId/dossier", dossierRouter);
 
 router.route("/radius/:zipcode/:distance").get(getPatientInRadius);
 
+router.route("/hidden").get(getHiddenPatients);
+router.route("/visible").get(getVisiblePatients);
+
 router
   .route("/")
   .get(
@@ -37,5 +43,7 @@ router
   .get(protect, authorize("secretary", "admin"), getPatient)
   .put(protect, authorize("secretary", "admin"), updatePatient)
   .delete(protect, authorize("admin"), deletePatient);
+
+router.route("/archive/:id").put(archivePatient);
 
 module.exports = router;
