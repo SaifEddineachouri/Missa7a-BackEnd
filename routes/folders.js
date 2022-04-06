@@ -8,6 +8,7 @@ const {
   addDossier,
   updateDossier,
   archiveDossier,
+  restoreDossier,
   deleteDossier,
 } = require("../controllers/folders");
 
@@ -67,5 +68,6 @@ router
   .delete(protect, authorize("admin"), deleteDossier);
 
 router.route("/archive/:id").put(archiveDossier);
+router.route("/:id/restore").put(restoreDossier);
 
 module.exports = router;

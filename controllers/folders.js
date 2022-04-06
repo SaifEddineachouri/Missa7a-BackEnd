@@ -170,6 +170,35 @@ exports.archiveDossier = asyncHandler(async (req, res, next) => {
   });
 });
 
+// @desc        Restore Medical Folder
+// @route       PUT api/v1/dossier/:id/restore
+// @access      Private
+exports.restoreDossier = asyncHandler(async (req, res, next) => {
+  let dossier = await Folder.findById(req.params.id);
+
+  if (!dossier) {
+    return next(
+      new ErrorResponse(`No Medical Folder with the id of ${req.params.id}`),
+      404
+    );
+  }
+
+  // NEW
+  dossier = await Folder.findByIdAndUpdate(
+    req.params.id,
+    { archived: false },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  res.status(200).json({
+    success: true,
+    data: dossier,
+  });
+});
+
 // @desc        Delete Medical Folder
 // @route       DELETE api/v1/dossier/:id
 // @access      Private

@@ -5,6 +5,7 @@ const {
   createPatient,
   updatePatient,
   archivePatient,
+  restorePatient,
   deletePatient,
   getPatientInRadius,
   getHiddenPatients,
@@ -45,5 +46,6 @@ router
   .delete(protect, authorize("admin"), deletePatient);
 
 router.route("/archive/:id").put(archivePatient);
+router.route("/:id/restore").put(restorePatient);
 
 module.exports = router;

@@ -124,15 +124,26 @@ PatientSchema.pre("remove", async function (next) {
 
 // Archive Dossier if Patient is hidden
 PatientSchema.post("findOneAndUpdate", async (doc) => {
-  console.log(`Patient ${doc._id} caché. Son dossier sera archivé`);
-  await DossierMedicale.findOneAndUpdate(
-    { patient: doc._id },
-    {
-      archived: true,
-    }
-  ).exec();
-});
+  if (doc.hidden == true) {
+    console.log(`Patient ${doc._id} caché. Son dossier sera archivé`);
+    await DossierMedicale.findOneAndUpdate(
+      { patient: doc._id },
+      {
+        archived: true,
+      }
+    ).exec();
+  }
 
+  if (doc.hidden == false) {
+    console.log(`Patient ${doc._id} caché. Son dossier sera archivé`);
+    await DossierMedicale.findOneAndUpdate(
+      { patient: doc._id },
+      {
+        archived: false,
+      }
+    ).exec();
+  }
+});
 
 // Reverse populate with  virtuals
 PatientSchema.virtual("dossier", {

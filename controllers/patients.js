@@ -115,6 +115,28 @@ exports.archivePatient = asyncHandler(async (req, res, next) => {
   res.status(200).json({ success: true, data: patient });
 });
 
+// @desc        Restore patient
+// @route       RESTORE api/v1/patients/:id/restore
+// @access      Private
+exports.restorePatient = asyncHandler(async (req, res, next) => {
+  const patient = await Patient.findByIdAndUpdate(
+    req.params.id,
+    { hidden: false },
+    {
+      new : true,
+      runValidators: true,
+    }
+  );
+
+  if (!patient) {
+    return next(
+      new ErrorResponse(`Patient not found with id of ${req.params.id}`, 404)
+    );
+  }
+
+  res.status(200).json({ success: true, data: patient });
+});
+
 // @desc        Get patients within a radius
 // @route       GET api/v1/patients/radius/:zipcode/:distance
 // @access      Private
