@@ -1,15 +1,14 @@
 const express = require("express");
 const {
   getPatient,
+  getHiddenPatients,
+  getVisiblePatients,
+  getPatientWithCin,
   getPatients,
   createPatient,
   updatePatient,
   archivePatient,
   restorePatient,
-  deletePatient,
-  getPatientInRadius,
-  getHiddenPatients,
-  getVisiblePatients,
 } = require("../controllers/patients");
 
 const advancedResults = require("../middleware/advancedResults");
@@ -18,16 +17,24 @@ const Patient = require("../models/Patient");
 
 // Include other resource routers
 const dossierRouter = require("./folders");
+const consultationRouter = require("./consultations");
+const appointmentRequestRouter = require("./appointmentsRequests");
 
 const router = express.Router();
 
 // Re-route into other resource routers
 router.use("/:patientId/dossier", dossierRouter);
+router.use("/:patientId/consultations", consultationRouter);
+router.use("/:patientId/appointment/request", appointmentRequestRouter);
 
-router.route("/radius/:zipcode/:distance").get(getPatientInRadius);
+router
+  .route("/hidden")
+  .get(protect, authorize("secretary", "admin"), getHiddenPatients);
+router
+  .route("/visible")
+  .get(protect, authorize("secretary", "admin"), getVisiblePatients);
 
-router.route("/hidden").get(getHiddenPatients);
-router.route("/visible").get(getVisiblePatients);
+router.route("/cin/:cin").get(protect, authorize("patient"), getPatientWithCin);
 
 router
   .route("/")
@@ -37,15 +44,14 @@ router
     advancedResults(Patient, "dossier"),
     getPatients
   )
-  .post(protect, createPatient);
+  .post(protect, authorize("secretary", "admin"), createPatient);
 
 router
   .route("/:id")
-  .get(protect, authorize("secretary", "admin"), getPatient)
-  .put(protect, authorize("secretary", "admin"), updatePatient)
-  .delete(protect, authorize("admin"), deletePatient);
+  .get(protect, authorize("secretary", "admin", "patient"), getPatient)
+  .put(protect, authorize("secretary", "admin"), updatePatient);
 
-router.route("/archive/:id").put(archivePatient);
-router.route("/:id/restore").put(restorePatient);
+router.route("/archive/:id").put(protect, authorize("admin"), archivePatient);
+router.route("/:id/restore").put(protect, authorize("admin"), restorePatient);
 
 module.exports = router;

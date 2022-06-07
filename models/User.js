@@ -6,41 +6,41 @@ const jwt = require("jsonwebtoken");
 const UserSchema = new mongoose.Schema({
   Prenom: {
     type: String,
-    required: [true, "Please add a Prenom"],
-    maxlength: [20, "Prenom can not be more than 20 characters "],
-    minlength: [4, "Prenom can not be less than 4 characters"],
+    required: [true, "Veuillez ajouter un prénom"],
+    maxlength: [20, "Prenom ne peut pas comporter plus de 20 caractères"],
+    minlength: [4, "Prenom ne peut pas être inférieur à 4 caractères"],
   },
   Nom: {
     type: String,
-    required: [true, "Please add a Nom"],
-    maxlength: [20, "Nom can not be more than 20 characters "],
-    minlength: [4, "Nom can not be less than 4 characters"],
+    required: [true, "Veuillez ajouter un nom"],
+    maxlength: [20, "Le nom ne peut pas comporter plus de 20 caractères"],
+    minlength: [4, "Nom ne peut pas être inférieur à 4 caractères"],
   },
   cin: {
     type: String,
-    required: [true, "Please add a National identification number"],
+    required: [true, "Veuillez ajouter un numéro d'identification national"],
     unique: true,
     maxlength: [
       8,
-      "National identification number can not be longer than 8 numbers",
+      "Le numéro d'identification national ne peut pas dépasser 8 chiffres",
     ],
     minlength: [
       8,
-      "National identification number can not be shorter than 8 numbers",
+      "Le numéro d'identification national ne peut pas être inférieur à 8 chiffres",
     ],
-    match: [/^[01][01][0-9]{6}$/, "Please add a valid CIN number"],
+    match: [/^[01][01][0-9]{6}$/, "Veuillez ajouter un numéro CIN valide"],
   },
   avatar: {
     type: String,
-    required: [true, "Please add a avatar"],
+    required: [true, "Veuillez ajouter un avatar"],
   },
   email: {
     type: String,
-    required: [true, "Please add an email"],
+    required: [true, "Veuillez ajouter un e-mail"],
     unique: true,
     match: [
       /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
-      "Please add a valid email",
+      "Veuillez ajouter un email valide",
     ],
   },
   role: {
@@ -50,7 +50,7 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, "Please add a password"],
+    required: [true, "Veuillez ajouter un mot de passe"],
     minlength: 10,
     select: false,
   },

@@ -6,17 +6,17 @@ const PatientSchema = new mongoose.Schema(
   {
     Prenom: {
       type: String,
-      required: [true, "Please add a Prenom"],
+      required: [true, "Veuillez ajouter un prénom"],
       trim: true,
-      maxlength: [20, "Prenom can not be more than 20 characters "],
-      minlength: [4, "Prenom can not be less than 4 characters"],
+      maxlength: [20, "Prenom ne peut pas comporter plus de 20 caractères"],
+      minlength: [4, "Prenom ne peut pas être inférieur à 4 caractères"],
     },
     Nom: {
       type: String,
-      required: [true, "Please add a Nom"],
+      required: [true, "Veuillez ajouter un nom"],
       trim: true,
-      maxlength: [20, "Nom can not be more than 20 characters "],
-      minlength: [5, "Nom can not be less than 5 characters"],
+      maxlength: [20, "Nom ne peut pas comporter plus de 20 caractères"],
+      minlength: [5, "Nom ne peut pas être inférieur à 5 caractères"],
     },
     cin: {
       type: String,
@@ -24,13 +24,17 @@ const PatientSchema = new mongoose.Schema(
       unique: true,
       maxlength: [
         8,
-        "National identification number can not be longer than 8 numbers",
+        "Le numéro d'identification national ne peut pas dépasser 8 chiffres",
       ],
       minlength: [
         0,
-        "National identification number can not be shorter than 8 numbers",
+        "Le numéro d'identification national ne peut pas être inférieur à 8 chiffres",
       ],
-      match: [/^[01][01][0-9]{6}$/, "Please add a valid CIN number"],
+      match: [/^[01][01][0-9]{6}$/, "Veuillez ajouter un numéro CIN valide"],
+    },
+    email: {
+      type: String,
+      required: true,
     },
     sexe: {
       type: String,
@@ -38,14 +42,23 @@ const PatientSchema = new mongoose.Schema(
     },
     numeroTel: {
       type: String,
-      required: [true, "Please add a phone number"],
-      maxlength: [8, "Phone number can not be longer than 8 characters"],
-      minlength: [8, "Phone number can not be shorter than 8 characters"],
-      match: [/([ \-_/]*)(\d[ \-_/]*){8}/, "Please add a valid phone number"],
+      required: [true, "Veuillez ajouter un numéro de téléphone"],
+      maxlength: [
+        8,
+        "Le numéro de téléphone ne peut pas dépasser 8 caractères",
+      ],
+      minlength: [
+        8,
+        "Le numéro de téléphone ne peut pas être inférieur à 8 caractères",
+      ],
+      match: [
+        /([ \-_/]*)(\d[ \-_/]*){8}/,
+        "Veuillez ajouter un numéro de téléphone valide",
+      ],
     },
     DateNaiss: {
       type: Date,
-      required: [true, "Please add a Date of Birth"],
+      required: [true, "Veuillez ajouter une date de naissance"],
     },
     Etatcivil: {
       type: String,
@@ -53,13 +66,13 @@ const PatientSchema = new mongoose.Schema(
     },
     Travail: {
       type: String,
-      required: [true, "Please add a Job"],
+      required: [true, "Veuillez ajouter un emploi"],
     },
     //Rue Jamel Abdennasser 39, Tunis, Tunis 1000, TN
     //Rue Jamel Eddine El Afghani, Tunis, Tunis 1095, TN
     adresse: {
       type: String,
-      required: [true, "Please add an adress"],
+      required: [true, "Veuillez ajouter une adresse"],
     },
     location: {
       // GeoJSON point
@@ -115,13 +128,6 @@ PatientSchema.pre("save", async function (next) {
   next();
 });
 
-// Cascade delete Dossier when a Patient is deleted
-PatientSchema.pre("remove", async function (next) {
-  console.log(`Dossier médical retiré du patient ${this._id}`);
-  await this.model("DossierMedicale").deleteMany({ patient: this._id });
-  next();
-});
-
 // Archive Dossier if Patient is hidden
 PatientSchema.post("findOneAndUpdate", async (doc) => {
   if (doc.hidden == true) {
@@ -145,11 +151,20 @@ PatientSchema.post("findOneAndUpdate", async (doc) => {
   }
 });
 
-// Reverse populate with  virtuals
+// Reverse populate with virtuals
 PatientSchema.virtual("dossier", {
   ref: "DossierMedicale",
   localField: "_id",
   foreignField: "patient",
   justOne: true,
 });
+
+// Reverse populate with virtuals
+PatientSchema.virtual("appointment", {
+  ref: "Appointment",
+  localField: "_id",
+  foreignField: "patient",
+  justOne: false,
+});
+
 module.exports = mongoose.model("Patient", PatientSchema);

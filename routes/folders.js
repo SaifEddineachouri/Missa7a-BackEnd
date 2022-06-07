@@ -1,6 +1,6 @@
 const express = require("express");
 const multer = require("multer");
-
+const { protect, authorize } = require("../middleware/auth");
 const {
   getDossiers,
   getArchivedDossiers,
@@ -9,11 +9,15 @@ const {
   updateDossier,
   archiveDossier,
   restoreDossier,
-  deleteDossier,
 } = require("../controllers/folders");
 
 const router = express.Router({ mergeParams: true });
-const { protect, authorize } = require("../middleware/auth");
+
+// Include other resource routers
+const consultationRouter = require("./consultations");
+
+// Re-route into other resource routers
+router.use("/:dossierId/consultations", consultationRouter);
 
 // Files Upload
 const MIME_TYPE_MAP = {
@@ -63,11 +67,10 @@ router
 router
   .route("/:id")
   .get(getDossier)
-  .put(protect, authorize("secretary", "admin"), updateDossier)
-  .put(archiveDossier)
-  .delete(protect, authorize("admin"), deleteDossier);
+  .put(protect, authorize("admin"), updateDossier)
+  .put(protect, authorize("admin"), archiveDossier);
 
-router.route("/archive/:id").put(archiveDossier);
-router.route("/:id/restore").put(restoreDossier);
+router.route("/archive/:id").put(protect, authorize("admin"), archiveDossier);
+router.route("/:id/restore").put(protect, authorize("admin"), restoreDossier);
 
 module.exports = router;

@@ -7,6 +7,7 @@
         "numeroTel" : "24145148",
         "DateNaiss":"12/05/1995",
         "Etatcivil":"Célibataire",
+        "Travail" : "Travailleur Par Jour",
         "adresse":"Rue Jamel Abdennasser 39, Tunis, Tunis 1000, TN",
         "assurance":"COMAR Assurance"
     },
@@ -18,6 +19,7 @@
         "numeroTel" : "95845125",
         "DateNaiss":"05/06/1999",
         "Etatcivil":"Célibataire",
+        "Travail" : "Medecin",
         "adresse":"Rue Jamel Eddine El Afghani, Tunis, Tunis 1095, TN",
         "assurance":"COMAR Assurance"
     },
@@ -29,6 +31,7 @@
         "numeroTel" : "36958458",
         "DateNaiss":"02/01/1998",
         "Etatcivil":"Célibataire",
+        "Travail" : "Police",
         "adresse":"Rue Jamel Eddine El Afghani, Tunis, Tunis 1095, TN",
         "assurance":"COMAR Assurance"
     }

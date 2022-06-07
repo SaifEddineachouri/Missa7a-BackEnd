@@ -8,7 +8,7 @@ dotenv.config({ path: "./config/config.env" });
 
 // Load models
 const Patient = require("./models/Patient");
-const Folders = require("./models/Folder");
+const Folder = require("./models/Folder");
 
 // Connect to DB
 mongoose.connect(process.env.MONGO_URI);

@@ -11,12 +11,12 @@ exports.getDossiers = asyncHandler(async (req, res, next) => {
   let query;
   if (req.params.patientId) {
     query = Folder.find({ patient: req.params.patientId }).populate({
-      path: "patient",
-      select: "Prenom Nom cin numeroTel",
+      path: "patient consultations",
+      select: "Prenom Nom cin numeroTel sumTarif paid createAt",
     });
   } else {
     query = Folder.find({ archived: false }).populate({
-      path: "patient",
+      path: "patient consultations",
       select: "Prenom Nom cin numeroTel",
     });
   }
@@ -35,8 +35,8 @@ exports.getDossiers = asyncHandler(async (req, res, next) => {
 // @access      Private
 exports.getDossier = asyncHandler(async (req, res, next) => {
   const dossier = await Folder.findById(req.params.id).populate({
-    path: "patient",
-    select: "Prenom Nom cin numeroTel",
+    path: "patient consultations",
+    select: "Prenom Nom cin numeroTel sumTarif paid createAt",
   });
 
   if (!dossier) {
@@ -57,7 +57,7 @@ exports.getDossier = asyncHandler(async (req, res, next) => {
 exports.getArchivedDossiers = asyncHandler(async (req, res, next) => {
   const dossiers = await Folder.find({ archived: true }).populate({
     path: "patient",
-    select: "Prenom Nom cin numeroTel",
+    select: "Prenom Nom cin numeroTel ",
   });
 
   if (!dossiers) {
@@ -80,16 +80,16 @@ exports.addDossier = asyncHandler(async (req, res, next) => {
 
   if (!patient) {
     return next(
-      new ErrorResponse(`No Patient with the id of ${req.params.patientId}`),
-      404
+      new ErrorResponse(
+        `No Patient with the id of ${req.params.patientId}`,
+        404
+      )
     );
   }
 
   const {
     TaillePatient,
     PoidsPatient,
-    TensionArterielle,
-    Temperature,
     PerimetrePatient,
     Antecedents,
     AllergiesMedicamenteuses,
@@ -102,8 +102,6 @@ exports.addDossier = asyncHandler(async (req, res, next) => {
     Nom: patient.Nom,
     TaillePatient,
     PoidsPatient,
-    TensionArterielle,
-    Temperature,
     PerimetrePatient,
     Antecedents,
     AllergiesMedicamenteuses,
@@ -196,26 +194,5 @@ exports.restoreDossier = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     data: dossier,
-  });
-});
-
-// @desc        Delete Medical Folder
-// @route       DELETE api/v1/dossier/:id
-// @access      Private
-exports.deleteDossier = asyncHandler(async (req, res, next) => {
-  const dossier = await Folder.findById(req.params.id);
-
-  if (!dossier) {
-    return next(
-      new ErrorResponse(`No Medical Folder with the id of ${req.params.id}`),
-      404
-    );
-  }
-
-  await dossier.remove();
-
-  res.status(200).json({
-    success: true,
-    data: [],
   });
 });

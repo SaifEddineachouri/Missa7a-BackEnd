@@ -6,6 +6,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const errorHandler = require("./middleware/error");
 const connectDB = require("./config/db");
+const scheduler = require("./scheduler");
 // Load env vars
 dotenv.config({ path: "./config/config.env" });
 
@@ -15,9 +16,20 @@ connectDB();
 // Route files
 const patients = require("./routes/patients");
 const folders = require("./routes/folders");
-const appointment = require("./routes/appointments");
-const auth = require("./routes/auth");
+const appointments = require("./routes/appointments");
+const appointmentRequests = require("./routes/appointmentsRequests");
+const consultations = require("./routes/consultations");
+const acts = require("./routes/acts");
+const financialAccounts = require("./routes/financialAccounts");
+const stocks = require("./routes/stocks");
+const categories = require("./routes/stockCategories");
+const products = require("./routes/products");
+const prescriptions = require("./routes/prescriptions");
+const medications = require("./routes/medications");
+const certifications = require("./routes/certifications");
+
 const users = require("./routes/users");
+const auth = require("./routes/auth");
 const app = express();
 
 // Body parser
@@ -47,9 +59,19 @@ if (process.env.NODE_ENV === "development") {
 // Mount routers
 app.use("/api/v1/patients", patients);
 app.use("/api/v1/dossiers", folders);
-app.use("/api/v1/appointments", appointment);
-app.use("/api/v1/auth", auth);
+app.use("/api/v1/appointments", appointments);
+app.use("/api/v1/appointment/request", appointmentRequests);
+app.use("/api/v1/consultations", consultations);
+app.use("/api/v1/acts", acts);
+app.use("/api/v1/accounts", financialAccounts);
+app.use("/api/v1/stocks", stocks);
+app.use("/api/v1/categories", categories);
+app.use("/api/v1/products", products);
+app.use("/api/v1/prescriptions", prescriptions);
+app.use("/api/v1/medications", medications);
+app.use("/api/v1/certifications", certifications);
 app.use("/api/v1/users", users);
+app.use("/api/v1/auth", auth);
 
 app.use(errorHandler);
 
@@ -69,3 +91,5 @@ process.on("unhandledRejection", (err, promise) => {
   // Close server and exit process
   server.close(() => process.exit(1));
 });
+
+scheduler.start();
