@@ -9,6 +9,22 @@ exports.getFinancialAccounts = asyncHandler(async (req, res, next) => {
   res.status(200).json(res.advancedResults);
 });
 
+// @desc        Get Open Financial Accounts
+// @route       GET api/v1/accounts/open
+// @access      Private
+exports.getOpenFinancialAccounts = asyncHandler(async (req, res, next) => {
+  const accounts = await FinancialAccount.find({ statut: "Ouvert" });
+
+  if (!accounts) {
+    return next(new ErrorResponse(`All Financial Accounts are closed.`), 404);
+  }
+  res.status(200).json({
+    success: true,
+    count: accounts.length,
+    data: accounts,
+  });
+});
+
 // @desc        Get single Financial Account
 // @route       GET api/v1/accounts/:id
 // @access      Private/Admin

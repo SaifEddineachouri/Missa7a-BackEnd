@@ -168,10 +168,6 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 
     return next(new ErrorResponse("Le mail n'a pas pu être envoyé", 500));
   }
-  res.status(200).json({
-    success: true,
-    data: user,
-  });
 });
 
 // @desc        Reset password

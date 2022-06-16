@@ -2,6 +2,7 @@ const express = require("express");
 const {
   getAccount,
   getFinancialAccounts,
+  getOpenFinancialAccounts,
   createFinancialAccount,
   updateFinancialAccount,
   deleteFinancialAccount,
@@ -10,6 +11,8 @@ const advancedResults = require("../middleware/advancedResults");
 const FinancialAccount = require("../models/FinancialAccount");
 
 const router = express.Router();
+
+router.route("/open").get(getOpenFinancialAccounts);
 
 router
   .route("/")
